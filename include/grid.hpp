@@ -1,12 +1,12 @@
 #pragma once
-#include <array>
+#include <vector>
 
 template <typename Value, int rows, int cols>
 class Grid {
-	std::array<Value, rows*cols> _grid;
+	std::vector<Value> _grid;
 
 public:
-	Grid() : _grid() {}
+	Grid() : _grid(rows*cols) {}
 
 	const Value& operator()(int i, int j) const;
 	Value& operator()(int i, int j);
