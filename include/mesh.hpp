@@ -33,11 +33,26 @@ public:
 
 template <typename FloatingPoint, typename Value>
 class Mesh {
-	// The vertices and triangles.
+	// The vertices, edges and triangles.
 	std::vector<Vertex<FloatingPoint, Value>> _vertices;
+	std::vector<std::array<int, 2>> _edges;
 	std::vector<std::array<int, 3>> _triangles;
 
-public:
+public
+	// The Mesh::Edge class.
+	class Edge{
+		std::array<int, 2> _ids;
+	
+		Vertex<FloatingPoint, Value>& _vertex1;
+		Vertex<FloatingPoint, Value>& _vertex2;
+
+	public:
+		Edge(
+			Vertex<FloatingPoint, Value>& v1,
+			Vertex<FloatingPoint, Value>& v2
+		) 	: _vertex1(v1), _vertex2(v2) {}
+	};
+
 	// The Mesh::Triangle class.
 	class Triangle{
 		std::array<int, 3> _ids;
@@ -57,11 +72,17 @@ public:
 public:
 	Triangle triangle(int id);
 
-	// Add vertex.
+	// Functions for constructing vertices.
 	int addVertex(const Vertex<FloatingPoint, Value>& vertex);
 
-	// Add triangle.
-	int addTriangle(int v1, int v2, int v3);
+	// Functions for constructing edges from two known vertices.
+	int addEdgeBlindly(int v1, int v2);
+
+	// Functions for constructing triangles.
+	int addTriangleBlindlyFromVertices(int v1, int v2, int v3);
+
+	// Add a vertex, near a triangle, creating another triangle.
+	int integrateVertex(int triangle, const Vertex<FloatingPoint, Value>& vertex);
 };
 
 
@@ -80,9 +101,19 @@ int Mesh<FloatingPoint, Value>::addVertex(const Vertex<FloatingPoint, Value>& ve
 	return _vertices.size() - 1;
 }
 
+template <typename FloatingPoint, typename Value>
+int Mesh<FloatingPoint, Value>::addEdgeBlindly(int v1, int v2) {
+	_edge.push_back({v1, v2});
+	return _edges.size() - 1;
+}
 
 template <typename FloatingPoint, typename Value>
-int Mesh<FloatingPoint, Value>::addTriangle(int v1, int v2, int v3) {
+int Mesh<FloatingPoint, Value>::addTriangleBlindlyFromVertices(int v1, int v2, int v3) {
 	_triangles.push_back({v1, v2, v3});
 	return _triangles.size() - 1;
+}
+
+template <typename FloatingPoint, typename Value>
+int integrateVertex(int triangle, const Vertex<FloatingPoint, Value>::triangle(int id) {
+	// TODO.
 }
