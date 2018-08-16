@@ -14,23 +14,6 @@ public:
 	inline const Value& value() const {return _value;}
 };
 
-/*
-template <typename FloatingPoint, typename Value>
-class Triangle{
-	std::array<int, 3> _ids;
-
-	Vertex<FloatingPoint, Value>& _vertex1;
-	Vertex<FloatingPoint, Value>& _vertex2;
-	Vertex<FloatingPoint, Value>& _vertex3;
-
-public:
-	Triangle(
-		Vertex<FloatingPoint, Value>& v1,
-		Vertex<FloatingPoint, Value>& v2,
-		Vertex<FloatingPoint, Value>& v3
-	) : _vertex1(v1), _vertex2(v2), _vertex3(v3) {}
-};*/
-
 template <typename FloatingPoint, typename Value>
 class Mesh {
 	// The vertices, edges and triangles.
