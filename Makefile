@@ -1,6 +1,6 @@
 CXX = g++
 FLAGS = -std=c++14
-INCLUDE = -Iinclude
+INCLUDE = -Iinclude -I/usr/include/eigen3
 WARNING = -Wall -Wextra
 
 SRC := $(wildcard src/*)
