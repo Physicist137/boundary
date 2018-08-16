@@ -11,6 +11,7 @@ class Vertex {
 
 public:
 	inline const Eigen::Matrix<FloatingPoint, 2, 1>& position() const {return _position;}
+	inline const Eigen::Matrix<FloatingPoint, 2, 1>& vector() const {return _position;}
 	inline const Value& value() const {return _value;}
 };
 
@@ -51,7 +52,8 @@ public:
 			Vertex<FloatingPoint, Value>& v3
 		) 	: _vertex1(v1), _vertex2(v2), _vertex3(v3) {}
 
-		bool isInside(const Vertex<FloatingPoint, Value>& vertex) const;
+		// Verifies if a point is inside a triangle.
+		bool isInside(const Eigen::Matrix<FloatingPoint, 2, 1>& vector) const;
 	};
 
 public:
@@ -71,8 +73,8 @@ public:
 };
 
 template <typename FloatingPoint, typename Value>
-bool Mesh<FloatingPoint, Value>::Triangle::isInside(const Vertex<FloatingPoint, Value>& vertex) const {
-
+bool Mesh<FloatingPoint, Value>::Triangle::isInside(const Eigen::Matrix<FloatingPoint, 2, 1>& vector) const {
+	// TODO.
 }
 
 template <typename FloatingPoint, typename Value>
