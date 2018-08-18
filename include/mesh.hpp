@@ -77,36 +77,38 @@ public:
 
 template <typename FloatingPoint, typename Value>
 bool Mesh<FloatingPoint, Value>::Triangle::isInside(const Eigen::Matrix<FloatingPoint, 2, 1>& vector) const {
-	// Warning: Untested.
-	Eigen::Matrix<FloatingPoint, 2, 1> edge12 = _vertex2 - _vertex1;
-	Eigen::Matrix<FloatingPoint, 2, 1> edge13 = _vertex3 - _vertex1;
-	Eigen::Matrix<FloatingPoint, 2, 1> edge23 = _vertex3 - _vertex2;
+	Eigen::Matrix<FloatingPoint, 2, 1> edge12 = _vertex2.vector() - _vertex1.vector();
+	Eigen::Matrix<FloatingPoint, 2, 1> edge13 = _vertex3.vector() - _vertex1.vector();
+	Eigen::Matrix<FloatingPoint, 2, 1> edge23 = _vertex3.vector() - _vertex2.vector();
+
+	Eigen::Matrix<FloatingPoint, 2, 2> matrix1;
+	matrix1(0,0) = edge12(0,0);
+	matrix1(0,1) = edge13(0,0);
+	matrix1(1,0) = edge12(1,0);
+	matrix1(1,1) = edge13(1,0);
+
+	Eigen::Matrix<FloatingPoint, 2, 2> matrix2;
+	matrix2(0,0) = -edge12(0,0);
+	matrix2(0,1) = edge23(0,0);
+	matrix2(1,0) = -edge12(1,0);
+	matrix2(1,1) = edge23(1,0);
+
+	Eigen::Matrix<FloatingPoint, 2, 2> matrix3;
+	matrix3(0,0) = -edge13(0,0);
+	matrix3(0,1) = -edge23(0,0);
+	matrix3(1,0) = -edge13(1,0);
+	matrix3(1,1) = -edge23(1,0);
+
+	Eigen::Matrix<FloatingPoint, 2, 1> bvec1 = matrix1.inverse() * (vector - _vertex1.vector());
+	Eigen::Matrix<FloatingPoint, 2, 1> bvec2 = matrix2.inverse() * (vector - _vertex2.vector());
+	Eigen::Matrix<FloatingPoint, 2, 1> bvec3 = matrix3.inverse() * (vector - _vertex3.vector());
 	
-	Eigen::Matrix<FloatingPoint, 2, 2> matrix1 = {
-		edge12(0, 0),	edge13(0, 0),
-		edge12(1, 0),	edge13(1, 0)
-	};
-
-	Eigen::Matrix<FloatingPoint, 2, 2> matrix2 = {
-		-edge12(0, 0), 	edge23(0, 0),
-		-edge12(1, 0),	edge23(1, 0)
-	};
-
-	Eigen::Matrix<FloatingPoint, 2, 2> matrix3 = {
-		-edge13(0,0),	-edge23(0,0),
-		-edge13(1,0),	-edge23(1,0)
-	};
-
-	Eigen::Matrix<FloatingPoint, 2, 1> bvec1 = matrix1.inverse() * (vector - _vertex1);
-	Eigen::Matrix<FloatingPoint, 2, 1> bvec2 = matrix2.inverse() * (vector - _vertex2);
-	Eigen::Matrix<FloatingPoint, 2, 1> bvec3 = matrix3.inverse() * (vector - _vertex3);
-	
-	if (bvec1(0,0) >= 1) return false;
-	if (bvec2(1,0) >= 1) return false;
-	if (bvec2(0,0) >= 1) return false;
-	if (bvec2(1,0) >= 1) return false;
-	if (bvec3(0,0) >= 1) return false;
-	if (bvec3(1,0) >= 1) return false;
+	if (bvec1(0,0) >= 1 or bvec1(0,0) <= 0) return false;
+	if (bvec1(1,0) >= 1 or bvec1(1,0) <= 0) return false;
+	if (bvec2(0,0) >= 1 or bvec2(0,0) <= 0) return false;
+	if (bvec2(1,0) >= 1 or bvec2(1,0) <= 0) return false;
+	if (bvec3(0,0) >= 1 or bvec3(0,0) <= 0) return false;
+	if (bvec3(1,0) >= 1 or bvec3(1,0) <= 0) return false;
 	return true;
 }
 
