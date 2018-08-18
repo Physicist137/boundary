@@ -57,6 +57,7 @@ public:
 
 		// Verifies if a point is inside a triangle.
 		bool isInside(const Eigen::Matrix<FloatingPoint, 2, 1>& vector) const;
+		bool isInside(const Vertex<FloatingPoint, Value>& vertex) const;
 	};
 
 public:
@@ -110,6 +111,11 @@ bool Mesh<FloatingPoint, Value>::Triangle::isInside(const Eigen::Matrix<Floating
 	if (bvec3(0,0) >= 1 or bvec3(0,0) <= 0) return false;
 	if (bvec3(1,0) >= 1 or bvec3(1,0) <= 0) return false;
 	return true;
+}
+
+template <typename FloatingPoint, typename Value>
+bool Mesh<FloatingPoint, Value>::Triangle::isInside(const Vertex<FloatingPoint, Value>& vertex) const {
+	return isInside(vertex.vector());
 }
 
 template <typename FloatingPoint, typename Value>
