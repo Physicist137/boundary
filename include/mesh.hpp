@@ -6,12 +6,15 @@
 
 template <typename FloatingPoint, typename Value>
 class Vertex {
-	Eigen::Matrix<FloatingPoint, 2, 1> _position;
+	Eigen::Matrix<FloatingPoint, 2, 1> _pos;
 	Value _value;
 
 public:
-	inline const Eigen::Matrix<FloatingPoint, 2, 1>& position() const {return _position;}
-	inline const Eigen::Matrix<FloatingPoint, 2, 1>& vector() const {return _position;}
+	explicit Vertex(const Eigen::Matrix<FloatingPoint, 2, 1>& pos) : _pos(pos), _value() {}
+	Vertex(const Eigen::Matrix<FloatingPoint, 2, 1>& pos, const Value& value) : _pos(pos), _value(value) {}	
+	
+	inline const Eigen::Matrix<FloatingPoint, 2, 1>& position() const {return _pos;}
+	inline const Eigen::Matrix<FloatingPoint, 2, 1>& vector() const {return _pos;}
 	inline const Value& value() const {return _value;}
 };
 
