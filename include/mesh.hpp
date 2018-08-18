@@ -78,19 +78,20 @@ bool Mesh<FloatingPoint, Value>::Triangle::isInside(const Eigen::Matrix<Floating
 	Eigen::Matrix<FloatingPoint, 2, 1> edge12 = _vertex2 - _vertex1;
 	Eigen::Matrix<FloatingPoint, 2, 1> edge13 = _vertex3 - _vertex1;
 	Eigen::Matrix<FloatingPoint, 2, 1> edge23 = _vertex3 - _vertex2;
+	
 	Eigen::Matrix<FloatingPoint, 2, 2> matrix1 = {
 		edge12(0, 0),	edge13(0, 0),
 		edge12(1, 0),	edge13(1, 0)
 	};
 
-	Eigen::Matrix<FloatingPoint, 2, 1> matrix2 = {
+	Eigen::Matrix<FloatingPoint, 2, 2> matrix2 = {
 		-edge12(0, 0), 	edge23(0, 0),
-		-edge12(1, 0),	edge23(0, 0)
+		-edge12(1, 0),	edge23(1, 0)
 	};
 
-	Eigen::Matrix<FloatingPoint, 2, 1> matrix3 = {
+	Eigen::Matrix<FloatingPoint, 2, 2> matrix3 = {
 		-edge13(0,0),	-edge23(0,0),
-		-edge13(0,0),	-edge23(0,0)
+		-edge13(1,0),	-edge23(1,0)
 	};
 
 	Eigen::Matrix<FloatingPoint, 2, 1> bvec1 = matrix1.inverse() * (vector - _vertex1);
