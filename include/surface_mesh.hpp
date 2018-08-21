@@ -56,9 +56,7 @@ public:
 	Point<FloatingPoint, Value> centralTangent(int id) const;
 
 	// Normal Values.
-	Point<FloatingPoint, Value> forwardNormal(int id) const;
-	Point<FloatingPoint, Value> backwardNormal(int id) const;
-	Point<FloatingPoint, Value> centralNormal(int id) const;	
+	Eigen::Matrix<FloatingPoint, 2, 1>& normalVector(const Eigen::Matrix<FloatingPoint, 2, 1>& tangent) const;
 };
 
 template <typename FloatingPoint, typename Value>
@@ -75,3 +73,9 @@ template <typename FloatingPoint, typename Value>
 Point<FloatingPoint, Value> SurfaceMesh<FloatingPoint, Value>::centralTangent(int id) const {
 	return (_point[i+1] - point[i-1]) / 2.0;
 }
+
+template <typename FloatingPoint, typename Value>
+Eigen::Matrix<FloatingPoint, 2, 1>& SurfaceMesh<FloatingPoint, Value>::normalVector
+(const Eigen::Matrix<FloatingPoint, 2, 1>& tangent) const;
+	return Matrix<FloatingPoint, 2, 1>{tangent(1,0), -tangent(0,0)};
+};
