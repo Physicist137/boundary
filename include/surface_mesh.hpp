@@ -43,24 +43,22 @@ Point<FloatingPoint, Value> operator/(const Point<FloatingPoint, Value>& a, cons
 // ----------------------------------------------------------
 template <typename FloatingPoint, typename Value>
 class SurfaceMesh {
-	std::vector< Matrix<FloatingPoint, 2, 1> > _points;
-	std::vector<Value> _value;
+	std::vector<Point<FloatingPoint, Value>> _points;
 
 public:
 	// Accessor functions.
-	inline const Matrix<FloatingPoint, 2, 1>& point(int id) const {return _points[id];}
-	inline const Value& value(int id) const {return _value[id];}
-	inline const std::vector<Value>::size_type size() const {return _value.size();}
+	inline const Point<FloatingPoint, Value>& point(int id) const {return _points[id];}
+	inline const std::vector<Point<FloatingPoint, Value>>::size_type size() const {return _points.size();}
 
 	// Tangent values.
-	Matrix<FloatingPoint, 2, 1> forwardTangent(int id) const;
-	Matrix<FloatingPoint, 2, 1> backwardTangent(int id) const;
-	Matrix<FloatingPoint, 2, 1> middleTangent(int id) const;
+	Point<FloatingPoint, Value> forwardTangent(int id) const;
+	Point<FloatingPoint, Value> backwardTangent(int id) const;
+	Point<FloatingPoint, Value> middleTangent(int id) const;
 
 	// Normal Values.
-	Matrix<FloatingPoint, 2, 1> forwardNormal(int id) const;
-	Matrix<FloatingPoint, 2, 1> backwardNormal(int id) const;
-	Matrix<FloatingPoint, 2, 1> middleNormal(int id) const;	
+	Point<FloatingPoint, Value> forwardNormal(int id) const;
+	Point<FloatingPoint, Value> backwardNormal(int id) const;
+	Point<FloatingPoint, Value> middleNormal(int id) const;	
 };
 
 
