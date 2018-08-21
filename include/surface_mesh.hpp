@@ -53,12 +53,25 @@ public:
 	// Tangent values.
 	Point<FloatingPoint, Value> forwardTangent(int id) const;
 	Point<FloatingPoint, Value> backwardTangent(int id) const;
-	Point<FloatingPoint, Value> middleTangent(int id) const;
+	Point<FloatingPoint, Value> centralTangent(int id) const;
 
 	// Normal Values.
 	Point<FloatingPoint, Value> forwardNormal(int id) const;
 	Point<FloatingPoint, Value> backwardNormal(int id) const;
-	Point<FloatingPoint, Value> middleNormal(int id) const;	
+	Point<FloatingPoint, Value> centralNormal(int id) const;	
 };
 
+template <typename FloatingPoint, typename Value>
+Point<FloatingPoint, Value> SurfaceMesh<FloatingPoint, Value>::forwardTangent(int id) const {
+	return _point[i+1] - _point[i];
+}
 
+template <typename FloatingPoint, typename Value>
+Point<FloatingPoint, Value> SurfaceMesh<FloatingPoint, Value>::backwardTangent(int id) const {
+	return _point[i] - _point[i-1];
+}
+
+template <typename FloatingPoint, typename Value>
+Point<FloatingPoint, Value> SurfaceMesh<FloatingPoint, Value>::centralTangent(int id) const {
+	return (_point[i+1] - point[i-1]) / 2.0;
+}
