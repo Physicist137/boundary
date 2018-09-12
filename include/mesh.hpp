@@ -1,8 +1,7 @@
-#pragma once
+/*#pragma once
 #include <Eigen/Dense>
 #include <vector>
 #include <array>
-
 
 template <typename FloatingPoint, typename Value>
 class Vertex {
@@ -24,6 +23,9 @@ class Mesh {
 	std::vector<Vertex<FloatingPoint, Value>> _vertices;
 	std::vector<std::array<int, 2>> _edges;
 	std::vector<std::array<int, 3>> _triangles;
+
+	// Some internal things.
+	std::vector<int> _empty;
 
 public:
 	// The Mesh::Edge class.
@@ -73,7 +75,10 @@ public:
 	int addTriangleBlindlyFromVertices(int v1, int v2, int v3);
 
 	// Add a vertex, inside a triangle, creating four triangles.
-	int addVertexInsideTriangle(int triangle, const Vertex<FloatingPoint, Value>& vertex);
+	int addVertexInsideTriangle(int tri, const Vertex<FloatingPoint, Value>& vertex);
+
+	// Functions to delete things.
+	void deleteVertex(int id);
 };
 
 template <typename FloatingPoint, typename Value>
@@ -120,6 +125,12 @@ bool Mesh<FloatingPoint, Value>::Triangle::isInside(const Vertex<FloatingPoint, 
 
 template <typename FloatingPoint, typename Value>
 typename Mesh<FloatingPoint, Value>::Triangle Mesh<FloatingPoint, Value>::triangle(int id) {
+	if (id >= _triangles.size()) throw "There does not exist given ID";
+
+	for (int e : _empty) {
+		if (e == id) throw "There does not exist given ID";
+	}
+	
 	return Mesh<FloatingPoint, Value>::Triangle(
 		_vertices[_triangles[id][0]],
 		_vertices[_triangles[id][1]],
@@ -129,8 +140,17 @@ typename Mesh<FloatingPoint, Value>::Triangle Mesh<FloatingPoint, Value>::triang
 
 template <typename FloatingPoint, typename Value>
 int Mesh<FloatingPoint, Value>::addVertex(const Vertex<FloatingPoint, Value>& vertex) {
-	_vertices.push_back(vertex);
-	return _vertices.size() - 1;
+	if (_empty.empty()) {
+		_vertices.push_back(vertex);
+		return _vertices.size() - 1;
+	}
+
+	else {
+		int id = _empty.front();
+		_vertices.push_back(id);
+		_empty.pop();
+		return id;
+	}
 }
 
 template <typename FloatingPoint, typename Value>
@@ -146,6 +166,32 @@ int Mesh<FloatingPoint, Value>::addTriangleBlindlyFromVertices(int v1, int v2, i
 }
 
 template <typename FloatingPoint, typename Value>
-int Mesh<FloatingPoint, Value>::addVertexInsideTriangle(int triangle, const Vertex<FloatingPoint, Value>& vertex) {
-	// TODO.
+int Mesh<FloatingPoint, Value>::addVertexInsideTriangle(int tri, const Vertex<FloatingPoint, Value>& vertex) {
+	// Check if the vertex is indeed inside triangle.
+	if (this->triangle(tri).isInside(vertex) == false) throw "Error: Vertex is not inside triangle!";
+
+	// Since it is, create the vertex and get ID.
+	int v = this->addVertex(vertex);
+
+	// Get the ID of the vertices of the initial triangles.
+	int a = _triangles[tri][0];
+	int b = _triangles[tri][1];
+	int c = _triangles[tri][2];
+
+	// Delete the initial triangle.
+	// THIS IS PLAIN WRONG. :(.
+	_triangles.erase(_triangles.begin() + tri);
+
+	// Add the three triangles that was formed.
+	this->addTriangleBlindlyFromVertices(a, b, v);
+	this->addTriangleBlindlyFromVertices(a, c, v);
+	this->addTriangleBlindlyFromVertices(b, c, v);
+
+	// Return the vertex ID.
+	return v;
 }
+
+template <typename FloatingPoint, typename Value>
+void Mesh<FloatingPoint, Value>::deleteVertex(int id) {
+	_empty.push_back(id);	
+}*/
