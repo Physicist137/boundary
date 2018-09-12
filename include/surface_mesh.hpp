@@ -12,6 +12,7 @@ public:
 	: _point(point), _value(value) {}
 
 	inline const Eigen::Matrix<FloatingPoint, 2, 1>& point() const {return _point;}
+	inline const Eigen::Matrix<FloatingPoint, 2, 1>& vector() const {return _point;}
 	inline const Value& value() const {return _value;}
 };
 
@@ -50,18 +51,22 @@ public:
 	inline const Point<FloatingPoint, Value>& point(int id) const {return _points[id];}
 	inline const typename std::vector<Point<FloatingPoint, Value>>::size_type size() const {return _points.size();}
 
-	// Tangent values.
-	Point<FloatingPoint, Value> forwardTangent(int id) const;
+	// Add points.
+	inline void addPoint(const Point<FloatingPoint, Value>& point) {_points.push_back(point);}
+
+	// Tangent values. TODO: Make it cyclic assumption.
+	Point<FloatingPoint, Value> forwardTangent(unsigned id) const;
 	Point<FloatingPoint, Value> backwardTangent(int id) const;
 	Point<FloatingPoint, Value> centralTangent(int id) const;
 
 	// Normal Values.
-	Eigen::Matrix<FloatingPoint, 2, 1>& normalVector(const Eigen::Matrix<FloatingPoint, 2, 1>& tangent) const;
+	Eigen::Matrix<FloatingPoint, 2, 1> normalVector(const Eigen::Matrix<FloatingPoint, 2, 1>& tangent) const;
 };
 
 template <typename FloatingPoint, typename Value>
-Point<FloatingPoint, Value> SurfaceMesh<FloatingPoint, Value>::forwardTangent(int id) const {
-	return _points[id+1] - _points[id];
+Point<FloatingPoint, Value> SurfaceMesh<FloatingPoint, Value>::forwardTangent(unsigned id) const {
+	if (id == _points.size()-1) return _points[0] - _points[id];
+	else return _points[id+1] - _points[id];
 }
 
 template <typename FloatingPoint, typename Value>
@@ -75,7 +80,7 @@ Point<FloatingPoint, Value> SurfaceMesh<FloatingPoint, Value>::centralTangent(in
 }
 
 template <typename FloatingPoint, typename Value>
-Eigen::Matrix<FloatingPoint, 2, 1>& SurfaceMesh<FloatingPoint, Value>::normalVector
+Eigen::Matrix<FloatingPoint, 2, 1> SurfaceMesh<FloatingPoint, Value>::normalVector
 (const Eigen::Matrix<FloatingPoint, 2, 1>& tangent) const {
-	return Eigen::Matrix<FloatingPoint, 2, 1>{-tangent(1,0), -tangent(0,0)};
+	return Eigen::Matrix<FloatingPoint, 2, 1>{-tangent(1,0), tangent(0,0)};
 }
